@@ -3,7 +3,6 @@ using InventoryService.Application.Validation;
 using MediatR;
 
 namespace InventoryService.Application.Inventories.AdjustInventories;
-
 public record AdjustInventoryExitCommand(
     Guid ProductId,
     int Quantity)

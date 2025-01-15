@@ -7,7 +7,6 @@ using ProductService.Application.Contracts;
 namespace InventoryService.Application.Mappings;
 public static class ContractMapping
 {
-
     public static ValidationFailureResponse MapToResponse(this IEnumerable<ValidationFailure> validationFailures)
     {
         return new ValidationFailureResponse
@@ -28,6 +27,17 @@ public static class ContractMapping
             {
                 PropertyName = x.PropertyName,
                 Message = x.ErrorMessage
+            })
+        };
+    }
+
+    public static OperationFailureResponse MapToResponse(this RecordNotFound notFound)
+    {
+        return new OperationFailureResponse
+        {
+            Errors = notFound.Messages.Select(message => new OperationResponse
+            {
+                Message = message
             })
         };
     }
