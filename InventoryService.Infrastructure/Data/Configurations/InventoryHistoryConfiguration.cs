@@ -13,18 +13,13 @@ public class InventoryHistoryConfiguration : IEntityTypeConfiguration<InventoryH
         builder.Property(b => b.ProductId)
             .IsRequired();
 
-        builder.Property(b => b.ProductName)
-            .IsRequired();
-
         builder.Property(b => b.InventoryId)
             .IsRequired();
 
         builder.Property(b => b.OldQuantity)
-            .HasColumnType("decimal(18,2)")
             .IsRequired();
 
         builder.Property(b => b.NewQuantity)
-            .HasColumnType("decimal(18,2)")
             .IsRequired();
 
         builder.Property(b => b.Timestamp)
