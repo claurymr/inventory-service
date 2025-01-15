@@ -3,11 +3,12 @@ using MassTransit;
 
 namespace InventoryService.Infrastructure.MessageBroker;
 
-public sealed class ProductUpdatedConsumer : IConsumer<ProductUpdatedEvent>
+public sealed class ProductDeletedConsumer : IConsumer<ProductDeletedEvent>
 {
-    public Task Consume(ConsumeContext<ProductUpdatedEvent> context)
+    public Task Consume(ConsumeContext<ProductDeletedEvent> context)
     {
         // Log the event
+        // update to 0 from inventory and inventory history
         throw new NotImplementedException();
     }
 }

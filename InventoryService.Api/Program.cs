@@ -1,5 +1,8 @@
 using FastEndpoints;
 using InventoryService.Api.Extensions;
+using InventoryService.Infrastructure.Data;
+using InventoryService.Infrastructure.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddFastEndpoints();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddInventoryServiceServices();
+builder.Services.AddDbContext<InventoryServiceDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("InventoryServiceConnection")));
 builder.Services.AddRabbitMQ(builder.Configuration);
 var app = builder.Build();
 
@@ -23,4 +29,5 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseFastEndpoints();
+app.MigrateDatabase();
 app.Run();
