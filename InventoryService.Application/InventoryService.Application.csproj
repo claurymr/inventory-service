@@ -9,4 +9,7 @@
     <PackageReference Include="MediatR" Version="12.4.1"/>
     <PackageReference Include="FluentValidation" Version="11.11.0"/>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InventoryService.Domain\InventoryService.Domain.csproj"/>
+  </ItemGroup>
 </Project>
