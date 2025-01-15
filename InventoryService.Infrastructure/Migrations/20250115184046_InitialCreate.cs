@@ -31,10 +31,9 @@ namespace InventoryService.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     ProductId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProductName = table.Column<string>(type: "TEXT", nullable: false),
                     InventoryId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    OldQuantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    NewQuantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OldQuantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    NewQuantity = table.Column<int>(type: "INTEGER", nullable: false),
                     Timestamp = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

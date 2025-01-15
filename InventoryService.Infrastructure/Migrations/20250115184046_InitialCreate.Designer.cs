@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryService.Infrastructure.Migrations
 {
     [DbContext(typeof(InventoryServiceDbContext))]
-    [Migration("20250115172720_InitialCreate")]
+    [Migration("20250115184046_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -50,17 +50,13 @@ namespace InventoryService.Infrastructure.Migrations
                     b.Property<Guid>("InventoryId")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("NewQuantity")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("NewQuantity")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("OldQuantity")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("OldQuantity")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("Timestamp")

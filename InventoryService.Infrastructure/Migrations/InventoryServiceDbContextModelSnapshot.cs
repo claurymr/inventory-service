@@ -47,17 +47,13 @@ namespace InventoryService.Infrastructure.Migrations
                     b.Property<Guid>("InventoryId")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("NewQuantity")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("NewQuantity")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("OldQuantity")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("OldQuantity")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("Timestamp")
