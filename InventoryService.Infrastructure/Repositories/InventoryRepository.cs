@@ -2,6 +2,7 @@ using InventoryService.Application.Repositories;
 using InventoryService.Domain;
 using InventoryService.Domain.Enums;
 using InventoryService.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryService.Infrastructure.Repositories;
 public class InventoryRepository(InventoryServiceDbContext dbContext) : IInventoryRepository
@@ -15,11 +16,16 @@ public class InventoryRepository(InventoryServiceDbContext dbContext) : IInvento
         return inventory.Id;
     }
 
-    public async Task<Inventory> GetInventoryByProductIdAsync(Guid id) => (await _dbContext.Inventories.FindAsync(id))!;
+    public async Task<Inventory> GetInventoryByProductIdAsync(Guid id)
+    {
+        return (await _dbContext.Inventories
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.ProductId == id))!;
+    }
 
     public async Task<(Inventory Inventory, int OldQuantity)> AdjustInventoryAsync(Guid id, ActionType action, int quantity)
     {
-        var existingInventory = await _dbContext.Inventories.FindAsync(id);
+        var existingInventory = (await _dbContext.Inventories.FirstOrDefaultAsync(x => x.ProductId == id))!;
         if (existingInventory == null)
         {
             return (existingInventory, default)!;

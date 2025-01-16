@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using ProductService.Application.Contracts;
 
 namespace InventoryService.Api.Endpoints.Inventories;
-public class GetProductByIdEndpoint(IMediator mediator)
+public class GetInventoryByProductIdEndpoint(IMediator mediator)
     : Endpoint<GetInventoryByProductIdQuery, Results<Ok<InventoryResponse>, NotFound<OperationFailureResponse>>>
 {
     private readonly IMediator _mediator = mediator;

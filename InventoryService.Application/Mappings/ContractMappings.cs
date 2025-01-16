@@ -41,6 +41,16 @@ public static class ContractMapping
             })
         };
     }
+    public static OperationFailureResponse MapToResponse(this OperationFailed notFound)
+    {
+        return new OperationFailureResponse
+        {
+            Errors = notFound.Messages.Select(message => new OperationResponse
+            {
+                Message = message
+            })
+        };
+    }
 
     public static InventoryResponse MapToResponse(this Inventory inventory)
     {
