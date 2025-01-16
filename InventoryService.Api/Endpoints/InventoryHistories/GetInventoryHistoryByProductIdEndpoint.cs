@@ -17,9 +17,11 @@ public class GetInventoryHistoryByProductIdEndpoint(IMediator mediator)
 
         Options(x =>
         {
-            x.RequireAuthorization();
+            x.RequireAuthorization("AdminOrUser");
             x.WithDisplayName("Get Inventory History By Product Id");
             x.Produces<Ok<IEnumerable<InventoryHistoryResponse>>>(StatusCodes.Status200OK);
+            x.Produces<ForbidHttpResult>(StatusCodes.Status403Forbidden);
+            x.Produces<UnauthorizedHttpResult>(StatusCodes.Status401Unauthorized);
             x.Accepts<GetInventoryHistoryByProductIdQuery>();
             x.WithOpenApi();
         });
