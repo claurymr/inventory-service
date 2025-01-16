@@ -14,7 +14,7 @@ public class GetInventoryByProductIdEndpoint(IMediator mediator)
 
     public override void Configure()
     {
-        Get("/inventories/{id}");
+        Get("/inventories/products/{productId}");
 
         Options(x =>
         {

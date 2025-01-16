@@ -13,7 +13,7 @@ public class GetInventoryHistoryByProductIdEndpoint(IMediator mediator)
 
     public override void Configure()
     {
-        Get("/inventoryhistories/{productId}");
+        Get("/inventoryhistories/products/{productId}");
 
         Options(x =>
         {

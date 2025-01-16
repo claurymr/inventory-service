@@ -13,7 +13,7 @@ public class AdjustInventoryEntryEndpoint(IMediator mediator)
 
     public override void Configure()
     {
-        Put("/inventories/{productId}/entry");
+        Put("/inventories/products/{productId}/entry");
 
         Options(x =>
         {

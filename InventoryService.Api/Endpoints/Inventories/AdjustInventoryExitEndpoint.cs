@@ -13,7 +13,7 @@ public class AdjustInventoryExitEndpoint(IMediator mediator)
 
     public override void Configure()
     {
-        Put("/inventories/{productId}/exit");
+        Put("/inventories/products/{productId}/exit");
 
         Options(x =>
         {
