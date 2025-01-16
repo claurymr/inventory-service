@@ -45,4 +45,18 @@ public class InventoryRepository(InventoryServiceDbContext dbContext) : IInvento
         await _dbContext.SaveChangesAsync();
         return (existingInventory, oldQut);
     }
+
+    public async Task<(Inventory Inventory, int OldQuantity)> UpdateInventoryToInitialAsync(Guid id, int quantity)
+    {
+        var existingInventory = (await _dbContext.Inventories.FirstOrDefaultAsync(x => x.ProductId == id))!;
+        if (existingInventory == null)
+        {
+            return (existingInventory, default)!;
+        }
+        var oldQut = existingInventory.Quantity;
+        existingInventory.Quantity = quantity;
+
+        await _dbContext.SaveChangesAsync();
+        return (existingInventory, oldQut);
+    }
 }

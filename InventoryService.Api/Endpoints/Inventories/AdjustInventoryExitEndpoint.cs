@@ -17,11 +17,13 @@ public class AdjustInventoryExitEndpoint(IMediator mediator)
 
         Options(x =>
         {
-            x.RequireAuthorization();
+            x.RequireAuthorization("AdminOnly");
             x.WithDisplayName("Adjust Inventory Exit");
             x.Produces<NoContent>(StatusCodes.Status204NoContent);
             x.Produces<BadRequest<ValidationFailureResponse>>(StatusCodes.Status400BadRequest);
             x.Produces<NotFound<OperationFailureResponse>>(StatusCodes.Status404NotFound);
+            x.Produces<ForbidHttpResult>(StatusCodes.Status403Forbidden);
+            x.Produces<UnauthorizedHttpResult>(StatusCodes.Status401Unauthorized);
             x.Accepts<AdjustInventoryExitCommand>();
             x.WithOpenApi();
         });

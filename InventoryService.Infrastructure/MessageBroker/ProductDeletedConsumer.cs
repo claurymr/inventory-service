@@ -1,14 +1,39 @@
 using InventoryService.Application.Contracts;
+using InventoryService.Application.Repositories;
+using InventoryService.Domain;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryService.Infrastructure.MessageBroker;
 
-public sealed class ProductDeletedConsumer : IConsumer<ProductDeletedEvent>
+public sealed class ProductDeletedConsumer
+    (IInventoryRepository inventoryRepository,
+    ILogger<ProductDeletedEvent> logger,
+    IInventoryHistoryRepository inventoryHistoryRepository)
+    : IConsumer<ProductDeletedEvent>
 {
-    public Task Consume(ConsumeContext<ProductDeletedEvent> context)
+    private readonly IInventoryRepository _inventoryRepository = inventoryRepository;
+    private readonly IInventoryHistoryRepository _inventoryHistoryRepository = inventoryHistoryRepository;
+    private readonly ILogger<ProductDeletedEvent> _logger = logger;
+    public async Task Consume(ConsumeContext<ProductDeletedEvent> context)
     {
         // Log the event
-        // update to 0 from inventory and inventory history
-        throw new NotImplementedException();
+        _logger.LogInformation(
+                "ProductDeletedEvent consumed with ProductId: {Id} - Name: {Name}",
+                context.Message.Id,
+                context.Message.ProductName);
+
+        var inventory = await _inventoryRepository.GetInventoryByProductIdAsync(context.Message.Id);
+        var result = await _inventoryRepository.UpdateInventoryToInitialAsync(context.Message.Id, 0);
+
+        await _inventoryHistoryRepository
+            .CreateInventoryHistoryAsync(
+                new InventoryHistory
+                {
+                    ProductId = context.Message.Id,
+                    InventoryId = inventory.Id,
+                    OldQuantity = result.OldQuantity,
+                    NewQuantity = 0
+                });
     }
 }

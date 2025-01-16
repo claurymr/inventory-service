@@ -18,10 +18,12 @@ public class GetInventoryByProductIdEndpoint(IMediator mediator)
 
         Options(x =>
         {
-            x.RequireAuthorization();
+            x.RequireAuthorization("AdminOrUser");
             x.WithDisplayName("Get Inventory By Product Id");
             x.Produces<Ok<InventoryResponse>>(StatusCodes.Status200OK);
             x.Produces<NotFound<OperationFailureResponse>>(StatusCodes.Status404NotFound);
+            x.Produces<ForbidHttpResult>(StatusCodes.Status403Forbidden);
+            x.Produces<UnauthorizedHttpResult>(StatusCodes.Status401Unauthorized);
             x.Accepts<GetInventoryByProductIdQuery>();
             x.WithOpenApi();
         });
