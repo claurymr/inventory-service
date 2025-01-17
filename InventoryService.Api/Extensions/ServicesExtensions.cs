@@ -20,18 +20,21 @@ public static class ServicesExtensions
     }
     public static IServiceCollection AddRabbitMQ(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<RabbitMQSettings>(configuration.GetSection("RabbitMQ"));
-        services.AddSingleton(sp =>
-            sp.GetRequiredService<IOptions<RabbitMQSettings>>().Value);
         services.AddMassTransit(busConfigurator =>
         {
             busConfigurator.SetKebabCaseEndpointNameFormatter();
             busConfigurator.AddConsumer<ProductCreatedConsumer>();
             busConfigurator.AddConsumer<ProductUpdatedConsumer>();
+            busConfigurator.AddConsumer<ProductDeletedConsumer>();
             busConfigurator.UsingRabbitMq((context, cfg) =>
             {
                 var rabbitMQSettings = context.GetRequiredService<IOptions<RabbitMQSettings>>().Value;
-                cfg.Host(new Uri($"amqp://{rabbitMQSettings.HostName}:{rabbitMQSettings.Port}"), h =>
+                var logger = context.GetRequiredService<ILogger<RabbitMQSettings>>();
+                var uri = $"rabbitmq://{rabbitMQSettings.HostName}/";
+                logger
+                    .LogInformation("Connecting to RabbitMQ at {rabbitMQHostName}:{rabbitMQPort}",
+                        rabbitMQSettings.HostName, rabbitMQSettings.Port);
+                cfg.Host(uri, h =>
                 {
                     h.Username(rabbitMQSettings.UserName);
                     h.Password(rabbitMQSettings.Password);
@@ -61,7 +64,7 @@ public static class ServicesExtensions
                     IssuerSigningKey = new SymmetricSecurityKey(secret)
                 };
                 options.Authority = configuration["Auth:Issuer"];
-                options.RequireHttpsMetadata = true;
+                options.RequireHttpsMetadata = false;
             });
 
         return services;
@@ -72,6 +75,9 @@ public static class ServicesExtensions
         services.Configure<AuthSettings>(configuration.GetSection("Auth"));
         services.AddSingleton(sp =>
             sp.GetRequiredService<IOptions<AuthSettings>>().Value);
+        services.Configure<RabbitMQSettings>(configuration.GetSection("RabbitMQ"));
+        services.AddSingleton(sp =>
+            sp.GetRequiredService<IOptions<RabbitMQSettings>>().Value);
         return services;
     }
 }

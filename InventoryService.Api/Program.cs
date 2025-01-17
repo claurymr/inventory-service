@@ -1,6 +1,9 @@
 using FastEndpoints;
+using FluentValidation;
 using InventoryService.Api.Extensions;
 using InventoryService.Api.Middlewares;
+using InventoryService.Application.Validation.Validators;
+using InventoryService.Infrastructure;
 using InventoryService.Infrastructure.Data;
 using InventoryService.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +19,9 @@ builder.Services.AddAuth(builder.Configuration);
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("AdminOnly", policy => policy.RequireRole("admin"))
     .AddPolicy("AdminOrUser", policy => policy.RequireRole("admin", "user"));
+builder.Services.AddValidatorsFromAssemblyContaining<AdjustInventoryEntryCommandValidator>();
+builder.Services.AddMediatR(config =>
+    config.RegisterServicesFromAssembly(typeof(DesignTimeContextFactory).Assembly));
 builder.Services.AddRabbitMQ(builder.Configuration);
 builder.Services.AddInventoryServiceServices();
 builder.Services.AddFastEndpoints();
@@ -34,6 +40,8 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
+
+app.UseRouting();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
