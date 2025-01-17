@@ -30,7 +30,6 @@ public class AdjustInventoryEntryEndpointTests
     {
         // Arrange
         var productId = Guid.NewGuid();
-        var action = ActionType.Entry;
         var quantity = 10;
         var inventory = _fixture
                         .Build<InventoryResponse>()
