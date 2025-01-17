@@ -1,5 +1,6 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using FastEndpoints;
 using FluentAssertions;
 using FluentValidation.Results;
 using InventoryService.Api.Endpoints.Inventories;
@@ -16,13 +17,12 @@ public class AdjustInventoryEntryEndpointTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IMediator> _mediatorMock;
-    private readonly AdjustInventoryEntryEndpoint _endpoint;
+    private AdjustInventoryEntryEndpoint? _endpoint;
 
     public AdjustInventoryEntryEndpointTests()
     {
         _fixture = new Fixture().Customize(new AutoMoqCustomization());
         _mediatorMock = _fixture.Freeze<Mock<IMediator>>();
-        _endpoint = new AdjustInventoryEntryEndpoint(_mediatorMock.Object);
     }
 
     [Fact]
@@ -30,7 +30,6 @@ public class AdjustInventoryEntryEndpointTests
     {
         // Arrange
         var productId = Guid.NewGuid();
-        var action = ActionType.Entry;
         var quantity = 10;
         var inventory = _fixture
                         .Build<InventoryResponse>()
@@ -47,6 +46,9 @@ public class AdjustInventoryEntryEndpointTests
                               .With(c => c.Quantity, quantity)
                               .Create();
         var validationResult = new ValidationResult();
+        _endpoint = Factory.Create<AdjustInventoryEntryEndpoint>(
+                c => c.Request.RouteValues.Add("productId", productId.ToString()),
+                _mediatorMock.Object);
         _mediatorMock
             .Setup(mediator => mediator.Send(request, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedInventory.ProductId);
@@ -65,15 +67,19 @@ public class AdjustInventoryEntryEndpointTests
     public async Task ExecuteAsync_ShouldReturnBadRequest_WhenRequestIsInvalid()
     {
         // Arrange
+        var productId = Guid.NewGuid();
         var request = _fixture
                         .Build<AdjustInventoryEntryCommand>()
-                        .Without(p => p.ProductId)
+                        .With(p => p.ProductId, productId)
+                        .Without(p => p.Quantity)
                         .Create();
         var validationFailed = new ValidationFailed(
                 new ValidationFailure(
-                    nameof(AdjustInventoryEntryCommand.ProductId),
-                    "ProductId is required"));
-
+                    nameof(AdjustInventoryEntryCommand.Quantity),
+                    "Quantity is required"));
+        _endpoint = Factory.Create<AdjustInventoryEntryEndpoint>(
+                c => c.Request.RouteValues.Add("productId", productId.ToString()),
+                _mediatorMock.Object);
         _mediatorMock
             .Setup(mediator => mediator.Send(It.IsAny<AdjustInventoryEntryCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(validationFailed);
@@ -85,7 +91,7 @@ public class AdjustInventoryEntryEndpointTests
         result.Should().NotBeNull();
         result.Result.Should().BeOfType(typeof(BadRequest<ValidationFailureResponse>));
         (result.Result as BadRequest<ValidationFailureResponse>)!.Value!
-            .Errors.Should().Contain(c => c.Message == "ProductId is required");
+            .Errors.Should().Contain(c => c.Message == "Quantity is required");
 
         _mediatorMock.Verify(mediator => mediator.Send(request, It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -99,7 +105,9 @@ public class AdjustInventoryEntryEndpointTests
                         .Build<AdjustInventoryEntryCommand>()
                         .With(p => p.ProductId, productId)
                         .Create();
-
+        _endpoint = Factory.Create<AdjustInventoryEntryEndpoint>(
+                c => c.Request.RouteValues.Add("productId", productId.ToString()),
+                _mediatorMock.Object);
         _mediatorMock
             .Setup(mediator => mediator.Send(It.IsAny<AdjustInventoryEntryCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new RecordNotFound([$"Inventory with ProductId {productId} not found."]));

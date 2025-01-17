@@ -19,17 +19,16 @@ public class GetInventoryHistoryByProductIdEndpointTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IMediator> _mediatorMock;
-    private readonly GetInventoryHistoryByProductIdEndpoint _endpoint;
+    private GetInventoryHistoryByProductIdEndpoint? _endpoint;
 
     public GetInventoryHistoryByProductIdEndpointTests()
     {
         _fixture = new Fixture().Customize(new AutoMoqCustomization());
         _mediatorMock = _fixture.Freeze<Mock<IMediator>>();
-        _endpoint = new GetInventoryHistoryByProductIdEndpoint(_mediatorMock.Object);
     }
 
     [Fact]
-    public async Task HandleAsync_ShouldReturnInventoryHistories_WhenProductIdExists()
+    public async Task ExecuteAsync_ShouldReturnInventoryHistories_WhenProductIdExists()
     {
         // Arrange
         var productId = Guid.NewGuid();
@@ -42,7 +41,9 @@ public class GetInventoryHistoryByProductIdEndpointTests
                         .Build<GetInventoryHistoryByProductIdQuery>()
                         .With(p => p.ProductId, productId)
                         .Create();
-
+        _endpoint = Factory.Create<GetInventoryHistoryByProductIdEndpoint>(
+                c => c.Request.RouteValues.Add("productId", productId.ToString()),
+                _mediatorMock.Object);
         _mediatorMock
             .Setup(mediator => mediator.Send(It.IsAny<GetInventoryHistoryByProductIdQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(inventoryHistories);
@@ -59,7 +60,7 @@ public class GetInventoryHistoryByProductIdEndpointTests
     }
 
     [Fact]
-    public async Task HandleAsync_ShouldReturnEmptyList_WhenProductIdDoNotExist()
+    public async Task ExecuteAsync_ShouldReturnEmptyList_WhenProductIdDoNotExist()
     {
         // Arrange
         var productId = Guid.NewGuid();
@@ -67,7 +68,9 @@ public class GetInventoryHistoryByProductIdEndpointTests
                         .Build<GetInventoryHistoryByProductIdQuery>()
                         .With(p => p.ProductId, productId)
                         .Create();
-
+        _endpoint = Factory.Create<GetInventoryHistoryByProductIdEndpoint>(
+                c => c.Request.RouteValues.Add("productId", productId.ToString()),
+                _mediatorMock.Object);
         _mediatorMock
             .Setup(mediator => mediator.Send(It.IsAny<GetInventoryHistoryByProductIdQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<InventoryHistoryResponse>());
@@ -84,7 +87,7 @@ public class GetInventoryHistoryByProductIdEndpointTests
     }
 
     [Fact]
-    public async Task HandleAsync_ShouldReturnInternalServerError_WhenExceptionIsThrown()
+    public async Task ExecuteAsync_ShouldReturnInternalServerError_WhenExceptionIsThrown()
     {
         // Arrange
         var productId = Guid.NewGuid();
@@ -92,7 +95,9 @@ public class GetInventoryHistoryByProductIdEndpointTests
                         .Build<GetInventoryHistoryByProductIdQuery>()
                         .With(p => p.ProductId, productId)
                         .Create();
-
+        _endpoint = Factory.Create<GetInventoryHistoryByProductIdEndpoint>(
+                c => c.Request.RouteValues.Add("productId", productId.ToString()),
+                _mediatorMock.Object);
         _mediatorMock
             .Setup(mediator => mediator.Send(It.IsAny<GetInventoryHistoryByProductIdQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OperationFailed("An error occurred."));
