@@ -13,6 +13,7 @@ public class GetInventoryHistoryByProductIdEndpoint(IMediator mediator)
 
     public override void Configure()
     {
+        Verbs(Http.GET);
         Get("/inventoryhistories/products/{productId}");
 
         Options(x =>
@@ -30,7 +31,8 @@ public class GetInventoryHistoryByProductIdEndpoint(IMediator mediator)
     public override async Task<Results<Ok<IEnumerable<InventoryHistoryResponse>>, JsonHttpResult<OperationFailureResponse>>>
         ExecuteAsync(GetInventoryHistoryByProductIdQuery req, CancellationToken ct)
     {
-        var result = await _mediator.Send(req, ct);
+        var newReq = req with { ProductId = Route<Guid>("productId") };
+        var result = await _mediator.Send(newReq, ct);
         var response = result.Match<IResult>(
                         inventoryHistories => TypedResults.Ok(inventoryHistories),
                         failed => TypedResults.Json(failed.MapToResponse(), statusCode: StatusCodes.Status500InternalServerError));

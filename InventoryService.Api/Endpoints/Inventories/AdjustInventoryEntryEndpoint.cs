@@ -13,6 +13,7 @@ public class AdjustInventoryEntryEndpoint(IMediator mediator)
 
     public override void Configure()
     {
+        Verbs(Http.PUT);
         Put("/inventories/products/{productId}/entry");
 
         Options(x =>
@@ -32,7 +33,8 @@ public class AdjustInventoryEntryEndpoint(IMediator mediator)
     public override async Task<Results<NoContent, BadRequest<ValidationFailureResponse>, NotFound<OperationFailureResponse>>>
         ExecuteAsync(AdjustInventoryEntryCommand req, CancellationToken ct)
     {
-        var result = await _mediator.Send(req, ct);
+        var newReq = req with { ProductId = Route<Guid>("productId") };
+        var result = await _mediator.Send(newReq, ct);
         var response = result
             .Match<IResult>(
             noContent => TypedResults.NoContent(),
