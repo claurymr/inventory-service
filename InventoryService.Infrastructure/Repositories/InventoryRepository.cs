@@ -42,11 +42,16 @@ public class InventoryRepository(InventoryServiceDbContext dbContext) : IInvento
             existingInventory.Quantity -= quantity;
         }
 
+        existingInventory.Quantity =
+            existingInventory.Quantity < 0
+            ? default
+            : existingInventory.Quantity;
+
         await _dbContext.SaveChangesAsync();
         return (existingInventory, oldQut);
     }
 
-    public async Task<(Inventory Inventory, int OldQuantity)> UpdateInventoryToInitialAsync(Guid id, int quantity)
+    public async Task<(Inventory Inventory, int OldQuantity)> UpdateInventoryToInitialAsync(Guid id)
     {
         var existingInventory = (await _dbContext.Inventories.FirstOrDefaultAsync(x => x.ProductId == id))!;
         if (existingInventory == null)
@@ -54,9 +59,21 @@ public class InventoryRepository(InventoryServiceDbContext dbContext) : IInvento
             return (existingInventory, default)!;
         }
         var oldQut = existingInventory.Quantity;
-        existingInventory.Quantity = quantity;
+        existingInventory.Quantity = default;
 
         await _dbContext.SaveChangesAsync();
         return (existingInventory, oldQut);
+    }
+
+    public async Task UpdateProductInInventoryByIdAsync(Guid id, Inventory inventory)
+    {
+        var existingInventory = (await _dbContext.Inventories.FirstOrDefaultAsync(x => x.ProductId == id))!;
+        if (existingInventory == null)
+        {
+            return;
+        }
+        existingInventory.ProductName = inventory.ProductName;
+
+        await _dbContext.SaveChangesAsync();
     }
 }

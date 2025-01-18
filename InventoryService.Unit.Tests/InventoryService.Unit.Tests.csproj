@@ -25,5 +25,6 @@
     <ProjectReference Include="..\InventoryService.Application\InventoryService.Application.csproj"/>
     <ProjectReference Include="..\InventoryService.Api\InventoryService.Api.csproj"/>
     <ProjectReference Include="..\InventoryService.Domain\InventoryService.Domain.csproj"/>
+    <ProjectReference Include="..\Shared.Contracts\Shared.Contracts.csproj"/>
   </ItemGroup>
 </Project>

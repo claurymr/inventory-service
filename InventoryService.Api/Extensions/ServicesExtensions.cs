@@ -9,6 +9,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Contracts.Events;
 
 namespace InventoryService.Api.Extensions;
 
@@ -39,6 +40,14 @@ public static class ServicesExtensions
                 {
                     h.Username(rabbitMQSettings.UserName);
                     h.Password(rabbitMQSettings.Password);
+                });
+
+                cfg.ReceiveEndpoint("product-notification-queue", e =>
+                {
+                    e.ConfigureConsumer<ProductCreatedConsumer>(context);
+                    e.ConfigureConsumer<ProductDeletedConsumer>(context);
+                    e.ConfigureConsumer<ProductUpdatedConsumer>(context);
+                    // e.Bind("Shared.Contracts.Events.ProductCreatedEvent");
                 });
             });
         });

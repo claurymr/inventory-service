@@ -6,6 +6,7 @@ using InventoryService.Application.EventBus;
 using InventoryService.Application.Validation;
 using InventoryService.Application.Contracts;
 using InventoryService.Domain;
+using Shared.Contracts.Events;
 
 namespace InventoryService.Infrastructure.Handlers.Inventories.AdjustInventories;
 public class AdjustInventoryEntryCommandHandler

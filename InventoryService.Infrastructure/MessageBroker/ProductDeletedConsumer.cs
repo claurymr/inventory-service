@@ -1,8 +1,8 @@
-using InventoryService.Application.Contracts;
 using InventoryService.Application.Repositories;
 using InventoryService.Domain;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using Shared.Contracts.Events;
 
 namespace InventoryService.Infrastructure.MessageBroker;
 
@@ -23,17 +23,15 @@ public sealed class ProductDeletedConsumer
                 context.Message.Id,
                 context.Message.ProductName);
 
-        var inventory = await _inventoryRepository.GetInventoryByProductIdAsync(context.Message.Id);
-        var result = await _inventoryRepository.UpdateInventoryToInitialAsync(context.Message.Id, 0);
-
-        await _inventoryHistoryRepository
-            .CreateInventoryHistoryAsync(
-                new InventoryHistory
-                {
-                    ProductId = context.Message.Id,
-                    InventoryId = inventory.Id,
-                    OldQuantity = result.OldQuantity,
-                    NewQuantity = 0
-                });
+        var result = await _inventoryRepository.UpdateInventoryToInitialAsync(context.Message.Id);
+        var inventoryHistory = new InventoryHistory
+        {
+            ProductId = context.Message.Id,
+            InventoryId = result.Inventory.Id,
+            OldQuantity = result.OldQuantity,
+            NewQuantity = default,
+            Timestamp = DateTime.UtcNow
+        };
+        await _inventoryHistoryRepository.CreateInventoryHistoryAsync(inventoryHistory);
     }
 }

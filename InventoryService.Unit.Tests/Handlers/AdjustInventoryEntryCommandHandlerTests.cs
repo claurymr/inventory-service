@@ -10,6 +10,7 @@ using InventoryService.Application.Repositories;
 using InventoryService.Domain;
 using InventoryService.Infrastructure.Handlers.Inventories.AdjustInventories;
 using Moq;
+using Shared.Contracts.Events;
 
 namespace InventoryService.Unit.Tests.Handlers;
 public class AdjustInventoryEntryCommandHandlerTests
@@ -95,7 +96,6 @@ public class AdjustInventoryEntryCommandHandlerTests
     {
         // Arrange
         var productId = Guid.NewGuid();
-        var action = ActionType.Entry;
         var quantity = 10;
         var command = _fixture.Build<AdjustInventoryEntryCommand>()
                               .With(c => c.ProductId, productId)

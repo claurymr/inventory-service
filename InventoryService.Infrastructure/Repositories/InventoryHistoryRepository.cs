@@ -19,6 +19,7 @@ public sealed class InventoryHistoryRepository(InventoryServiceDbContext dbConte
         return await _dbContext.InventoryHistories
                         .AsNoTracking()
                         .Where(x => x.ProductId == id)
+                        .Include(x => x.Inventory)
                         .ToListAsync();
     }
 }
