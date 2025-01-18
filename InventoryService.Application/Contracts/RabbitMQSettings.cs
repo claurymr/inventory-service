@@ -6,4 +6,5 @@ public record RabbitMQSettings
     public string UserName { get; init; } = string.Empty;
     public string Password { get; init; } = string.Empty;
     public string Port { get; init; } = string.Empty;
+    public string PortAlt { get; init; } = string.Empty;
 }
