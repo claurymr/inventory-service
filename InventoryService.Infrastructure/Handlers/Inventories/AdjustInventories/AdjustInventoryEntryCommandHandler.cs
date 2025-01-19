@@ -6,8 +6,19 @@ using InventoryService.Application.EventBus;
 using InventoryService.Application.Validation;
 using InventoryService.Application.Contracts;
 using InventoryService.Domain;
+using Shared.Contracts.Events;
 
 namespace InventoryService.Infrastructure.Handlers.Inventories.AdjustInventories;
+/// <summary>
+/// Handles the adjustment of inventory entries.
+/// </summary>
+/// <param name="inventoryRepository">The inventory repository.</param>
+/// <param name="inventoryHistoryRepository">The inventory history repository.</param>
+/// <param name="validator">The validator for the AdjustInventoryEntryCommand.</param>
+/// <param name="eventBus">The event bus for publishing events.</param>
+/// <returns>
+/// A result containing the product ID if successful, or a validation failure or record not found error.
+/// </returns>
 public class AdjustInventoryEntryCommandHandler
     (IInventoryRepository inventoryRepository,
     IInventoryHistoryRepository inventoryHistoryRepository,

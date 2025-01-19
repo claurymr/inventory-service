@@ -1,9 +1,9 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using InventoryService.Application.Inventories.AdjustInventories;
 using InventoryService.Infrastructure.MessageBroker;
 using MassTransit;
 using Moq;
+using Shared.Contracts.Events;
 
 namespace InventoryService.Unit.Tests.MessageBroker;
 public class EventBusTests

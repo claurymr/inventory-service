@@ -10,6 +10,7 @@ using InventoryService.Application.Repositories;
 using InventoryService.Domain;
 using InventoryService.Infrastructure.Handlers.Inventories.AdjustInventories;
 using Moq;
+using Shared.Contracts.Events;
 
 namespace InventoryService.Unit.Tests.Handlers;
 public class AdjustInventoryExitCommandHandlerTests
@@ -96,7 +97,6 @@ public class AdjustInventoryExitCommandHandlerTests
     {
         // Arrange
         var productId = Guid.NewGuid();
-        var action = ActionType.Exit;
         var quantity = 10;
         var command = _fixture.Build<AdjustInventoryExitCommand>()
                               .With(c => c.ProductId, productId)

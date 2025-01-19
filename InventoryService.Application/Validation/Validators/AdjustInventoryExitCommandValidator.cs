@@ -2,6 +2,9 @@ using FluentValidation;
 using InventoryService.Application.Inventories.AdjustInventories;
 
 namespace InventoryService.Application.Validation.Validators;
+/// <summary>
+/// Validator for the <see cref="AdjustInventoryExitCommand"/> class.
+/// </summary>
 public class AdjustInventoryExitCommandValidator : AbstractValidator<AdjustInventoryExitCommand>
 {
     public AdjustInventoryExitCommandValidator()

@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InventoryService.Infrastructure.Data.Configurations;
 
+/// <summary>
+/// Configuration class for the InventoryHistory entity.
+/// </summary>
 public class InventoryHistoryConfiguration : IEntityTypeConfiguration<InventoryHistory>
 {
     public void Configure(EntityTypeBuilder<InventoryHistory> builder)

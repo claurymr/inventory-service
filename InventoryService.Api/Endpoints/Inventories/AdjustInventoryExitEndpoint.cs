@@ -6,6 +6,16 @@ using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace InventoryService.Api.Endpoints.Inventories;
+/// <summary>
+/// Endpoint to adjust the inventory exit for a specific product.
+/// </summary>
+/// <param name="mediator">The mediator instance used to send commands.</param>
+/// <response code="204">The inventory exit was successfully adjusted.</response>
+/// <response code="400">The request was invalid, typically due to validation failures.</response>
+/// <response code="404">The specified product was not found.</response>
+/// <response code="403">The user is not authorized to perform this action.</response>
+/// <response code="401">The user is not authenticated.</response>
+/// <returns>A result indicating the outcome of the operation.</returns>
 public class AdjustInventoryExitEndpoint(IMediator mediator)
     : Endpoint<AdjustInventoryExitCommand, Results<NoContent, BadRequest<ValidationFailureResponse>, NotFound<OperationFailureResponse>>>
 {
@@ -30,6 +40,7 @@ public class AdjustInventoryExitEndpoint(IMediator mediator)
         });
     }
 
+    
     public override async Task<Results<NoContent, BadRequest<ValidationFailureResponse>, NotFound<OperationFailureResponse>>>
         ExecuteAsync(AdjustInventoryExitCommand req, CancellationToken ct)
     {
