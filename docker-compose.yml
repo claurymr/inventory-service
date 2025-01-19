@@ -1,35 +1,24 @@
 services:
-  inventoryservice.api:
+  inventoryservice:
     image: inventoryservice
     build:
       context: .
       dockerfile: InventoryService.Api/Dockerfile
     ports:
       - "${INVENTORYSERVICE_PORT}:${INVENTORYSERVICE_PORT}"
+      - "${INVENTORYSERVICE_PORTALT}:${INVENTORYSERVICE_PORTALT}"
+    env_file:
+      - ../.env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:${INVENTORYSERVICE_PORT}
-      - RABBITMQ__HOSTNAME=${RABBITMQ__HOSTNAME}
-      - RABBITMQ__QUEUENAME=${RABBITMQ__QUEUENAME}
-      - RABBITMQ__PORT=${RABBITMQ__PORT}
-      - RABBITMQ__USERNAME=${RABBITMQ__USERNAME}
-      - RABBITMQ__PASSWORD=${RABBITMQ__PASSWORD}
-      - AUTH__USERNAME=${AUTH__USERNAME}
-      - AUTH__PASSWORD=${AUTH__PASSWORD}
-      - AUTH__ROLE=${AUTH__ROLE}
-      - AUTH__ISSUER=${AUTH__ISSUER}${STOREAPI_PORT}
-      - AUTH__AUDIENCE=${AUTH__AUDIENCE}
-      - AUTH__SECRET=${AUTH__SECRET}
     volumes:
       - inventoryservice-data:/app/Data
-    depends_on:
-      - rabbitmq
     networks:
       - shared-network
 
 volumes:
   inventoryservice-data:
-  rabbitmq-data:
+  store-mq-data:
 
 networks:
   shared-network:

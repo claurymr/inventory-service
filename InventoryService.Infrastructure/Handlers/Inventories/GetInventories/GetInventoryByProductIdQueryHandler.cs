@@ -1,5 +1,4 @@
 using MediatR;
-using ProductService.Application.Contracts;
 using InventoryService.Application.Repositories;
 using InventoryService.Application.Inventories.GetInventories;
 using InventoryService.Application.Validation;
@@ -7,6 +6,10 @@ using InventoryService.Application.Contracts;
 using InventoryService.Application.Mappings;
 
 namespace InventoryService.Infrastructure.Handlers.Inventories.GetInventories;
+/// <summary>
+/// Handles the query to get inventory by product ID.
+/// </summary>
+/// <param name="inventoryRepository">The inventory repository.</param>
 public class GetInventoryByProductIdQueryHandler(IInventoryRepository inventoryRepository)
     : IRequestHandler<GetInventoryByProductIdQuery, Result<InventoryResponse, RecordNotFound>>
 {

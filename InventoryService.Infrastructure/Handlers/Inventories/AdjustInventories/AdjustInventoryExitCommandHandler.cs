@@ -6,8 +6,20 @@ using InventoryService.Application.EventBus;
 using InventoryService.Application.Validation;
 using InventoryService.Application.Contracts;
 using InventoryService.Domain;
+using Shared.Contracts.Events;
 
 namespace InventoryService.Infrastructure.Handlers.Inventories.AdjustInventories;
+/// <summary>
+/// Handles the adjustment of inventory exit commands.
+/// </summary>
+/// <param name="inventoryRepository">The inventory repository.</param>
+/// <param name="inventoryHistoryRepository">The inventory history repository.</param>
+/// <param name="validator">The validator for the AdjustInventoryExitCommand.</param>
+/// <param name="eventBus">The event bus for publishing events.</param>
+/// <returns>
+/// A handler for the AdjustInventoryExitCommand that returns a ResultWithWarning containing the Guid of 
+/// the adjusted inventory, ValidationFailed, or RecordNotFound.
+/// </returns>
 public class AdjustInventoryExitCommandHandler
     (IInventoryRepository inventoryRepository,
     IInventoryHistoryRepository inventoryHistoryRepository,

@@ -1,4 +1,7 @@
 namespace InventoryService.Application.Contracts;
+/// <summary>
+/// Represents a response containing validation failures.
+/// </summary>
 public record ValidationFailureResponse
 {
     public required IEnumerable<ValidationResponse> Errors { get; init; }

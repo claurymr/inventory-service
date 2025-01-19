@@ -2,7 +2,6 @@ using FluentValidation.Results;
 using InventoryService.Application.Contracts;
 using InventoryService.Application.Validation;
 using InventoryService.Domain;
-using ProductService.Application.Contracts;
 
 namespace InventoryService.Application.Mappings;
 public static class ContractMapping
@@ -74,6 +73,7 @@ public static class ContractMapping
         {
             Id = inventoryHistory.Id,
             ProductId = inventoryHistory.ProductId,
+            InventoryId = inventoryHistory.Inventory.Id,
             ProductName = inventoryHistory.Inventory.ProductName,
             OldQuantity = inventoryHistory.OldQuantity,
             NewQuantity = inventoryHistory.NewQuantity,

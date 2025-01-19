@@ -1,5 +1,6 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using FastEndpoints;
 using FluentAssertions;
 using InventoryService.Api.Endpoints.Inventories;
 using InventoryService.Application.Contracts;
@@ -8,20 +9,18 @@ using InventoryService.Application.Validation;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
-using ProductService.Application.Contracts;
 
 namespace InventoryService.Unit.Tests.Endpoints.Inventories;
 public class GetInventoryByProductIdEndpointTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IMediator> _mediatorMock;
-    private readonly GetInventoryByProductIdEndpoint _endpoint;
+    private GetInventoryByProductIdEndpoint? _endpoint;
 
     public GetInventoryByProductIdEndpointTests()
     {
         _fixture = new Fixture().Customize(new AutoMoqCustomization());
         _mediatorMock = _fixture.Freeze<Mock<IMediator>>();
-        _endpoint = new GetInventoryByProductIdEndpoint(_mediatorMock.Object);
     }
 
     [Fact]
@@ -37,7 +36,9 @@ public class GetInventoryByProductIdEndpointTests
                         .Build<GetInventoryByProductIdQuery>()
                         .With(p => p.Id, productId)
                         .Create();
-
+        _endpoint = Factory.Create<GetInventoryByProductIdEndpoint>(
+                c => c.Request.RouteValues.Add("productId", productId.ToString()),
+                _mediatorMock.Object);
         _mediatorMock
             .Setup(mediator => mediator.Send(It.IsAny<GetInventoryByProductIdQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(inventory);
@@ -62,7 +63,9 @@ public class GetInventoryByProductIdEndpointTests
                         .Build<GetInventoryByProductIdQuery>()
                         .With(p => p.Id, productId)
                         .Create();
-
+        _endpoint = Factory.Create<GetInventoryByProductIdEndpoint>(
+                c => c.Request.RouteValues.Add("productId", productId.ToString()),
+                _mediatorMock.Object);
         _mediatorMock
             .Setup(mediator => mediator.Send(It.IsAny<GetInventoryByProductIdQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new RecordNotFound([$"Inventory with Product Id {productId} not found."]));
