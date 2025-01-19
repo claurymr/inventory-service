@@ -5,6 +5,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace InventoryService.Infrastructure.Extensions;
+
+/// <summary>
+/// Provides extension methods for the <see cref="IHost"/> interface.
+/// </summary>
 public static class HostExtensions
 {
     public static IHost MigrateDatabase(this IHost host)

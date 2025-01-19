@@ -13,13 +13,27 @@ using Shared.Contracts.Events;
 
 namespace InventoryService.Api.Extensions;
 
+/// <summary>
+/// Provides extension methods for configuring services in the InventoryService API.
+/// </summary>
 public static class ServicesExtensions
 {
+    /// <summary>
+    /// Adds inventory service related services to the service collection.
+    /// </summary>
+    /// <param name="services">The service collection to add services to.</param>
     public static void AddInventoryServiceServices(this IServiceCollection services)
     {
         services.AddScoped<IInventoryRepository, InventoryRepository>();
         services.AddScoped<IInventoryHistoryRepository, InventoryHistoryRepository>();
     }
+
+    /// <summary>
+    /// Configures RabbitMQ and MassTransit for the service collection.
+    /// </summary>
+    /// <param name="services">The service collection to add services to.</param>
+    /// <param name="configuration">The application configuration.</param>
+    /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddRabbitMQ(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMassTransit(busConfigurator =>
@@ -57,6 +71,12 @@ public static class ServicesExtensions
         return services;
     }
 
+    /// <summary>
+    /// Configures JWT authentication and authorization policies for the service collection.
+    /// </summary>
+    /// <param name="services">The service collection to add services to.</param>
+    /// <param name="configuration">The application configuration.</param>
+    /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -85,6 +105,12 @@ public static class ServicesExtensions
         return services;
     }
 
+    /// <summary>
+    /// Configures application settings from the configuration.
+    /// </summary>
+    /// <param name="services">The service collection to add services to.</param>
+    /// <param name="configuration">The application configuration.</param>
+    /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddConfigSettings(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<AuthSettings>(configuration.GetSection("Auth"));

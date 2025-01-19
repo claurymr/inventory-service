@@ -6,6 +6,19 @@ using Shared.Contracts.Events;
 
 namespace InventoryService.Infrastructure.MessageBroker;
 
+/// <summary>
+/// Consumer class for handling ProductDeletedEvent messages.
+/// </summary>
+/// <param name="inventoryRepository">The inventory repository to update inventory data.</param>
+/// <param name="logger">The logger to log information about the event.</param>
+/// <param name="inventoryHistoryRepository">The inventory history repository to create inventory history records.</param>
+///
+/// <remarks>
+/// This consumer listens for ProductDeletedEvent messages and processes them by:
+/// 1. Updating the inventory to its initial state.
+/// 2. Logging the event.
+/// 3. Creates a history record of the inventory change.
+/// </remarks>
 public sealed class ProductDeletedConsumer
     (IInventoryRepository inventoryRepository,
     ILogger<ProductDeletedEvent> logger,
@@ -15,6 +28,8 @@ public sealed class ProductDeletedConsumer
     private readonly IInventoryRepository _inventoryRepository = inventoryRepository;
     private readonly IInventoryHistoryRepository _inventoryHistoryRepository = inventoryHistoryRepository;
     private readonly ILogger<ProductDeletedEvent> _logger = logger;
+   
+   /// <inheritdoc/>
     public async Task Consume(ConsumeContext<ProductDeletedEvent> context)
     {
         // Log the event

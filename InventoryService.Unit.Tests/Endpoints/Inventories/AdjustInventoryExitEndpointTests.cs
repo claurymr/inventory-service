@@ -10,7 +10,6 @@ using InventoryService.Application.Validation;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
-using ProductService.Application.Contracts;
 
 namespace InventoryService.Unit.Tests.Endpoints.Inventories;
 public class AdjustInventoryExitEndpointTests

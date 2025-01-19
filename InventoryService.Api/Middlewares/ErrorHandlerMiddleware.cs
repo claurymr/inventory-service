@@ -1,6 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryService.Api.Middlewares;
+/// <summary>
+/// Middleware to handle exceptions and log errors.
+/// </summary>
+/// <param name="next">The next middleware in the pipeline.</param>
+/// <param name="logger">The logger to log errors.</param>
 public class ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
 {
     private readonly RequestDelegate _next = next;

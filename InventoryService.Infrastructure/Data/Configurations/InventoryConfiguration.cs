@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InventoryService.Infrastructure.Data.Configurations;
 
+/// <summary>
+/// Configures the Inventory entity type.
+/// </summary>
+/// <param name="builder">The builder used to configure the Inventory entity.</param>
 public class InventoryConfiguration : IEntityTypeConfiguration<Inventory>
 {
     public void Configure(EntityTypeBuilder<Inventory> builder)

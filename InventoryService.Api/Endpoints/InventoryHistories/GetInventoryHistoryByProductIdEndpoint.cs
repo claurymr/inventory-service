@@ -6,6 +6,15 @@ using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace InventoryService.Api.Endpoints.InventoryHistories;
+/// <summary>
+/// Endpoint to get the inventory history by product ID.
+/// </summary>
+/// <param name="mediator">The mediator instance for sending queries.</param>
+/// <response code="200">Returns a list of inventory history responses.</response>
+/// <response code="403">If the user is not authorized.</response>
+/// <response code="401">If the user is not authenticated.</response>
+/// <response code="500">If there is an internal server error.</response>
+/// <returns>A result indicating the outcome of the operation.</returns>
 public class GetInventoryHistoryByProductIdEndpoint(IMediator mediator)
 : Endpoint<GetInventoryHistoryByProductIdQuery, Results<Ok<IEnumerable<InventoryHistoryResponse>>, JsonHttpResult<OperationFailureResponse>>>
 {
